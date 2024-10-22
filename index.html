@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gra dzik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align:center;
+            margin-top: 50px;
+            background-image: url('https://asset.gecdesigns.com/img/wallpapers/starry-night-sky-reflection-background-hd-wallpaper-sr10012425-1705222416280-cover.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color:white;
+        }
+        img {
+            height: 300px;
+            width: 500px;
+            cursor: pointer;
+        }
+        #game-over {
+            color:red;
+            font-size: 24px;
+            display: none;
+        }
+        #counter {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px auto;
+            display: block;
+        }
+        #start-btn, #restart-btn{
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            background-color: #ffffff;
+            color: #000000;
+            border:none;
+            border-radius: 5px;
+        }
+
+        #restart-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gra Dzik</h1>
+    <p>Kliknij dzika, gdy liczba ma cyfre 7 lub jest podzielna przez 7</p>
+    <span id="counter">0</span>
+    <img id="dzik" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPXQ-DoPtfpIBXVlrsmijeuMGpb3Not8u6DA&s" alt="Dzik">
+    <p id="score">Wynik: 0</p>
+    <p id="game-over">Koniec Gry!</p>
+    <p id="best-score">Najlepszy wynik: 0</p>
+    <button id ="start-btn">Rozpocznij Grę</button>
+    <button id="restart-btn">Zrestartuj Grę</button>
+
+    <script>
+        let counter = 0;
+        let score = 0;
+        let bestScore = 0;
+        let intervalId;
+        const counterDisplay = document.getElementById('counter');
+        const dzikImg = document.getElementById('dzik');
+        const scoreDisplay = document.getElementById('score');
+        const bestScoreDisplay = document.getElementById('best-score');
+        const gameOverDisplay = document.getElementById('game-over');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        function podzielnaLubRowna(number) {
+            return number % 7 === 0 || number.toString().includes('7');
+        }
+
+        function nastepnaLiczba(){
+            counter++;
+            counterDisplay.textContent = counter;
+        }
+
+        dzikImg.addEventListener('click', function(){
+            if(podzielnaLubRowna(counter)){
+                score++;
+                scoreDisplay.textContent = `Wynik: ${score}`;
+            } else {
+                endGame();
+            }
+        });
+
+        function endGame(){
+            clearInterval(intervalId);
+            dzikImg.style.pointerEvents = 'none';
+            gameOverDisplay.style.display = 'block';
+            restartBtn.style.display = 'inline-block';
+
+            if (score > bestScore){
+                bestScore = score;
+                bestScoreDisplay.textContent = `Najlepszy wynik: ${bestScore}`;
+            }
+        }
+
+        function startGame(){
+            startBtn.style.display = 'none';
+            dzikImg.style.display = 'inline';
+            restartBtn.style.display = 'none';
+            dzikImg.style.pointerEvents = 'auto';
+            counter = 0;
+            score = 0;
+            counterDisplay.textContent = counter;
+            scoreDisplay.textContent = `Wynik: ${score}`;
+            gameOverDisplay.style.display = 'none';
+            intervalId = setInterval(nastepnaLiczba, 1000);
+        }
+
+        function restartGame(){ 
+            startGame();
+        }
+
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', restartGame);
+    </script>
+</body>
+
+     
+</html>
